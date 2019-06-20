@@ -1,0 +1,18 @@
+image: alpine:latest
+
+before_script:
+#  - docker login localhost
+  - COMMIT=${CI_COMMIT_SHA:0:8}
+  - BRANCH=$CI_COMMIT_REF_NAME
+
+stages:
+  - build
+  - test
+  - publish
+
+Build:
+  only:
+    - master
+  stage: build
+  script:
+    - echo "hello"

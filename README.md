@@ -16,3 +16,17 @@ Tag `alpine`.
 Executor `docker`.
 
 Docker Image `alpine:latest`.
+
+edit the file svr/gitlab-runner/config/config.toml replace gitlab_network with the Docker network.
+
+You can get the docker network with `docker network list`.
+
+```toml
+[[runners]]
+  ...
+  [runners.docker]
+    ...
+    network_mode = "gitlab_default"
+
+
+```
