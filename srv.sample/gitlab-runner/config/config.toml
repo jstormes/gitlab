@@ -5,21 +5,21 @@ check_interval = 0
   session_timeout = 1800
 
 [[runners]]
-  name = "alpine"
-  url = "http://gitlab"
-  token = "tEyF9xWbZnjyChUMupYM"
+  name = "docker"
+  url = "http://gitlab/"
+  token = "55Fbsdz99SKcN8spro5r"
   executor = "docker"
   [runners.custom_build_dir]
   [runners.docker]
-    network_mode = "gitlab_default"
     tls_verify = false
     image = "docker:stable"
     privileged = true
     disable_entrypoint_overwrite = false
     oom_kill_disable = false
     disable_cache = false
-    volumes = ["/cache"]
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
     shm_size = 0
+    network_mode = "gitlabnew_default"
   [runners.cache]
     [runners.cache.s3]
     [runners.cache.gcs]

@@ -1,44 +1,89 @@
 # Quick Start
 
-When you are setting the password you are setting the password for user "root".
+Check out this code from git and run `docker-compose up` then give the containers a bit to get started.
 
-After you bing up the Docker images with `docker-compose`, up exec into the docker container for gitlab-runner and 
-run `gitlab-runner register`. 
+## Setting the root password
 
-For the host use `http://gitlab/`.
+After the containers are started open http://localhost.  You should be prompted to create a password.  You are 
+creating the password for the user "root".
 
-For the token go to the http:\\locahost gitlab and Admin->Overview->Runners and copy the token.
+## Setting up the GitLab Runner
 
-Description `alpine`.
+Run the gitlab-runner register command using the docker container.  You will need to do this in a second terminal
+as the system needs to be up.
 
-Tag `alpine`.
+`docker exec -it gitlab-runner gitlab-runner register --docker-privileged true`
 
-Executor `docker`.
+**Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):**
 
-Docker Image `alpine:latest`.
-Docker image `docker:stable`.
+http://gitlab/
 
-edit the file svr/gitlab-runner/config/config.toml replace gitlab_network with the Docker network.
+**Please enter the gitlab-ci token for this runner:**
 
-You can get the docker network with `docker network list`.
+(Copy from the Admin->Overview->Runners screen aka http://localhost/admin/runners )
+
+**Please enter the gitlab-ci description for this runner:**
+
+(I used "docker")
+
+**Please enter the gitlab-ci tags for this runner (comma separated):**
+
+docker
+
+**Please enter the executor: docker-ssh, virtualbox, docker+machine, docker-ssh+machine, docker, parallels, shell, ssh, kubernetes:**
+
+docker
+
+**Please enter the default Docker image (e.g. ruby:2.6):**
+
+docker:stable
+
+---
+
+Refresh the runners page and you should see the new runner (http://localhost/admin/runners).
+
+Edit the runner and turn on "Run untagged jobs".
+
+---
+
+Edit the file ./srv/config/config.toml:
 
 ```toml
-[[runners]]
-  ...
-  [runners.docker]
-    ...
-    network_mode = "gitlab_default"
+concurrent = 1
+check_interval = 0
 
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "docker"
+  url = "http://gitlab/"
+  token = "55Fbsdz99SKcN8spro5r"
+  executor = "docker"
+  [runners.custom_build_dir]
+  [runners.docker]
+    tls_verify = false
+    image = "docker:stable"
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"]
+    shm_size = 0
+    network_mode = "gitlabnew_default"
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
 
 ```
 
+Make note of the "volumes", "privileged" and "network_mode".  
 
-gitlab-psql@gitlab:/var/opt/gitlab$ /opt/gitlab/embedded/bin/psql -d gitlabhq_production -h /var/opt/gitlab/postgresql
+"Volumes" should include "/var/run/docker.sock:/var/run/docker.sock".
 
-/opt/gitlab/embedded/bin/pg_dump -Fc -d gitlabhq_production -h /var/opt/gitlab/postgresql --table users > users.sql
+"privileged" should be true.
 
-/opt/gitlab/embedded/bin/pg_restore --data-only < users.sql
-
-
-
+"network_mode" should be the docker network that the containers all run in.  Run the command 
+`docker inspect gitlab-runner -f "{{json .NetworkSettings.Networks }}"` to see the network name.  It will be the
+first key.
 

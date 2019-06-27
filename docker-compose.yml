@@ -4,8 +4,8 @@ services:
 
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
-#    restart: always
     hostname: 'gitlab'
+    container_name: 'gitlab'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab/'
@@ -21,6 +21,7 @@ services:
 
   gitlab-runner:
     image: 'gitlab/gitlab-runner:latest'
+    container_name: 'gitlab-runner'
     volumes:
       - './srv/gitlab-runner/config:/etc/gitlab-runner'
       - '/var/run/docker.sock:/var/run/docker.sock'
@@ -28,6 +29,8 @@ services:
   registry:
     image: 'distribution/registry'
     hostname: 'registry'
+    container_name: 'registry'
     ports:
       - '5000:5000'
       - '5001:5001'
+
