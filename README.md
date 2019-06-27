@@ -87,3 +87,12 @@ Make note of the "volumes", "privileged" and "network_mode".
 `docker inspect gitlab-runner -f "{{json .NetworkSettings.Networks }}"` to see the network name.  It will be the
 first key.
 
+# Local Docker Repository 
+
+To use the local Docker repository:
+
+`docker build -t test .`
+
+`docker tag test localhost:5000/test`
+
+`docker push localhost:5000/test`
