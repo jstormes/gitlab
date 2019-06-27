@@ -46,7 +46,7 @@ Edit the runner and turn on "Run untagged jobs".
 
 ---
 
-Edit the file ./srv/config/config.toml:
+Edit the file ./srv/gitlab-runner/config/config.toml:
 
 ```toml
 concurrent = 1
