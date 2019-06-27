@@ -16,6 +16,7 @@ Tag `alpine`.
 Executor `docker`.
 
 Docker Image `alpine:latest`.
+Docker image `docker:stable`.
 
 edit the file svr/gitlab-runner/config/config.toml replace gitlab_network with the Docker network.
 
@@ -30,3 +31,14 @@ You can get the docker network with `docker network list`.
 
 
 ```
+
+
+gitlab-psql@gitlab:/var/opt/gitlab$ /opt/gitlab/embedded/bin/psql -d gitlabhq_production -h /var/opt/gitlab/postgresql
+
+/opt/gitlab/embedded/bin/pg_dump -Fc -d gitlabhq_production -h /var/opt/gitlab/postgresql --table users > users.sql
+
+/opt/gitlab/embedded/bin/pg_restore --data-only < users.sql
+
+
+
+

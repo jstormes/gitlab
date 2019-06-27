@@ -4,7 +4,7 @@ services:
 
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
-    restart: always
+#    restart: always
     hostname: 'gitlab'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
@@ -21,7 +21,13 @@ services:
 
   gitlab-runner:
     image: 'gitlab/gitlab-runner:latest'
-    restart: always
     volumes:
       - './srv/gitlab-runner/config:/etc/gitlab-runner'
       - '/var/run/docker.sock:/var/run/docker.sock'
+
+  registry:
+    image: 'distribution/registry'
+    hostname: 'registry'
+    ports:
+      - '5000:5000'
+      - '5001:5001'
