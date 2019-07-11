@@ -45,6 +45,12 @@ Refresh the runners page and you should see the new runner (http://localhost/adm
 Edit the runner and turn on "Run untagged jobs".
 
 ---
+Change directory into the gitlab project.
+
+The permissions for the config files will be set to root only.  We will need to reset these so we can edit them from our
+IDE
+
+sudo chmod -R a+rw srv
 
 Edit the file ./srv/gitlab-runner/config/config.toml:
 
